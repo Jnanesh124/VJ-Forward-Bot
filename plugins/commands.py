@@ -4,7 +4,7 @@
 
 import os
 import sys
-import asyncio 
+import asyncio
 from database import Db, db
 from config import Config, temp
 from script import Script
@@ -16,22 +16,20 @@ from os import environ, execle, system
 
 START_TIME = time.time()
 
+# List of channels users must join
+REQUIRED_CHANNELS = ["@ROCKERSBACKUP", "@JN2FLIX"]
+
 # Don't Remove Credit Tg - @VJ_Botz
 # Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
 # Ask Doubt on telegram @KingVJ01
 
 main_buttons = [[
-    InlineKeyboardButton('❣️ ᴅᴇᴠᴇʟᴏᴘᴇʀ ❣️', url='https://t.me/kingvj01')
+        InlineKeyboardButton(' ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/ROCKERSACKUP')
 ],[
-    InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/vj_bot_disscussion'),
-    InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/vj_botz')
+    InlineKeyboardButton(' ʜᴇʟᴘ', callback_data='help'),
+    InlineKeyboardButton(' ᴀʙᴏᴜᴛ', callback_data='about')
 ],[
-    InlineKeyboardButton('💝 sᴜʙsᴄʀɪʙᴇ ᴍʏ ʏᴏᴜᴛᴜʙᴇ ᴄʜᴀɴɴᴇʟ', url='https://youtube.com/@Tech_VJ')
-],[
-    InlineKeyboardButton('👨‍💻 ʜᴇʟᴘ', callback_data='help'),
-    InlineKeyboardButton('💁 ᴀʙᴏᴜᴛ', callback_data='about')
-],[
-    InlineKeyboardButton('⚙ sᴇᴛᴛɪɴɢs', callback_data='settings#main')
+    InlineKeyboardButton('sᴇᴛᴛɪɴɢs', callback_data='settings#main')
 ]]
 
 # Don't Remove Credit Tg - @VJ_Botz
@@ -43,11 +41,32 @@ async def start(client, message):
     user = message.from_user
     if not await db.is_user_exist(user.id):
         await db.add_user(user.id, user.first_name)
+    # Check if user is a member of the required channels
+    for channel in REQUIRED_CHANNELS:
+        try:
+            member = await client.get_chat_member(channel, user.id)
+            if member.status not in ["member", "administrator", "creator"]:
+                await prompt_subscription(client, message, channel)
+                return
+        except Exception:
+            await prompt_subscription(client, message, channel)
+            return
     reply_markup = InlineKeyboardMarkup(main_buttons)
     await client.send_message(
         chat_id=message.chat.id,
         reply_markup=reply_markup,
         text=Script.START_TXT.format(message.from_user.first_name))
+
+async def prompt_subscription(client, message, channel):
+    buttons = [[
+        InlineKeyboardButton('Join Channel', url=f'https://t.me/{channel}')
+    ]]
+    reply_markup = InlineKeyboardMarkup(buttons)
+    await client.send_message(
+        chat_id=message.chat.id,
+        text=f"Please join {channel} to use this bot.",
+        reply_markup=reply_markup
+    )
 
 # Don't Remove Credit Tg - @VJ_Botz
 # Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
