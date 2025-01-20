@@ -13,9 +13,12 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import psutil
 import time
 from os import environ, execle, system
+
 START_TIME = time.time()
+
 # Define your required channel IDs (use the chat ID for private channels, used in the format -100...)
 FORCE_CHANNELS = [-1001764441595, -1002135593873]  # Replace these with your actual channel IDs
+
 main_buttons = [[
     InlineKeyboardButton('❣️ ᴅᴇᴠᴇʟᴏᴘᴇʀ ❣️', url='https://t.me/kingvj01')
 ],[
@@ -29,10 +32,11 @@ main_buttons = [[
 ],[
     InlineKeyboardButton('⚙ sᴇᴛᴛɪɴɢs', callback_data='settings#main')
 ]]
+
 @Client.on_message(filters.private & filters.command(['start']))
 async def start(client, message):
     user = message.from_user
-    
+
     # Check if the user is a member of the specified channels
     for channel in FORCE_CHANNELS:
         try:
@@ -65,6 +69,7 @@ async def start(client, message):
         reply_markup=reply_markup,
         text=Script.START_TXT.format(user.first_name)
     )
+
 # Implement other handlers as needed...
 async def get_bot_uptime(start_time):
     uptime_seconds = int(time.time() - start_time)
@@ -79,5 +84,5 @@ async def get_bot_uptime(start_time):
         uptime_string += f" {uptime_minutes % 60}M"
     uptime_string += f" {uptime_seconds % 60} Sec"
     return uptime_string
-# Your existing callback query handlers go here...
 
+# Your existing callback query handlers go here...
