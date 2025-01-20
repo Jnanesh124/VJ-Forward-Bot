@@ -43,7 +43,7 @@ async def start(client, message):
             chat_member = await client.get_chat_member(channel, user.id)
             print(f"Checked membership for {user.id} in {channel}: {chat_member.status}")  # Debugging statement
             
-            # Check if the user is either a member or an admin
+            # Check if the user is either a member, admin, or creator
             if chat_member.status not in ["member", "administrator", "creator"]:
                 await message.reply_text(
                     text=f"Please join our channel: https://t.me/joinchat/XXXXXX",
