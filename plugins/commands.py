@@ -31,6 +31,7 @@ async def start(client, message):
     for channel in FORCE_CHANNELS:
         try:
             chat_member = await client.get_chat_member(channel, user.id)
+            # Check if the user is either a member or an admin
             if chat_member.status not in ["member", "administrator", "creator"]:
                 await message.reply_text(
                     text=f"Please join our channel: Channel Link",
@@ -38,7 +39,11 @@ async def start(client, message):
                 )
                 return
         except Exception as e:
-            await message.reply_text("I couldn't check your subscription status. Please try again later.")
+            # If the user is not found in the channel, they'll see this message
+            await message.reply_text(
+                text=f"You need to join our channel: Channel Link",
+                disable_web_page_preview=True
+            )
             return
     
     # Add user to database if they do not exist
