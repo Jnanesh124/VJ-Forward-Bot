@@ -46,7 +46,7 @@ async def start(client, message):
             # Check if the user is either a member or an admin
             if chat_member.status not in ["member", "administrator", "creator"]:
                 await message.reply_text(
-                    text=f"Please join our channel: Channel Link",
+                    text=f"Please join our channel: https://t.me/joinchat/XXXXXX",
                     disable_web_page_preview=True
                 )
                 return
@@ -54,7 +54,7 @@ async def start(client, message):
             # Specific error handling to understand what's going wrong
             print(f"Error checking membership for user {user.id} in {channel}: {e}")  # Debugging statement
             await message.reply_text(
-                text=f"Unable to check your membership status in the channel. Please join and try again.\nChannel Link",
+                text=f"Unable to check your membership status in the channel. Please join and try again.\nhttps://t.me/joinchat/XXXXXX",
                 disable_web_page_preview=True
             )
             return
