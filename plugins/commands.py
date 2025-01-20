@@ -9,20 +9,26 @@ from database import Db, db
 from config import Config, temp
 from script import Script
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaDocument
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import psutil
-import time as time
+import time
 from os import environ, execle, system
 START_TIME = time.time()
+# Define your required channel IDs (use the chat ID for private channels, used in the format -100...)
+FORCE_CHANNELS = [-1001764441595, -1002135593873]  # Replace these with your actual channel IDs
 main_buttons = [[
-    InlineKeyboardButton('update ᴄʜᴀɴɴᴇʟ', url='t.me/ROCKERSBACKUP')
+    InlineKeyboardButton('❣️ ᴅᴇᴠᴇʟᴏᴘᴇʀ ❣️', url='https://t.me/kingvj01')
+],[
+    InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/vj_bot_disscussion'),
+    InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/vj_botz')
+],[
+    InlineKeyboardButton('💝 sᴜʙsᴄʀɪʙᴇ ᴍʏ ʏᴏᴜᴛᴜʙᴇ ᴄʜᴀɴɴᴇʟ', url='https://youtube.com/@Tech_VJ')
 ],[
     InlineKeyboardButton('👨‍💻 ʜᴇʟᴘ', callback_data='help'),
     InlineKeyboardButton('💁 ᴀʙᴏᴜᴛ', callback_data='about')
 ],[
     InlineKeyboardButton('⚙ sᴇᴛᴛɪɴɢs', callback_data='settings#main')
 ]]
-FORCE_CHANNELS = [-1001764441595, -1002135593873]  # Replace these with your channel IDs
 @Client.on_message(filters.private & filters.command(['start']))
 async def start(client, message):
     user = message.from_user
@@ -31,6 +37,8 @@ async def start(client, message):
     for channel in FORCE_CHANNELS:
         try:
             chat_member = await client.get_chat_member(channel, user.id)
+            print(f"Checked membership for {user.id} in {channel}: {chat_member.status}")  # Debugging statement
+            
             # Check if the user is either a member or an admin
             if chat_member.status not in ["member", "administrator", "creator"]:
                 await message.reply_text(
@@ -39,9 +47,10 @@ async def start(client, message):
                 )
                 return
         except Exception as e:
-            # If the user is not found in the channel, they'll see this message
+            # Specific error handling to understand what's going wrong
+            print(f"Error checking membership for user {user.id} in {channel}: {e}")  # Debugging statement
             await message.reply_text(
-                text=f"You need to join our channel: Channel Link",
+                text=f"Unable to check your membership status in the channel. Please join and try again.\nChannel Link",
                 disable_web_page_preview=True
             )
             return
@@ -54,17 +63,9 @@ async def start(client, message):
     await client.send_message(
         chat_id=message.chat.id,
         reply_markup=reply_markup,
-        text=Script.START_TXT.format(message.from_user.first_name)
+        text=Script.START_TXT.format(user.first_name)
     )
-# Other handlers remain unchanged...
-@Client.on_message(filters.private & filters.command(['restart']) & filters.user(Config.BOT_OWNER))
-async def restart(client, message):
-    msg = await message.reply_text(text="<i>Trying to restarting.....</i>")
-    await asyncio.sleep(5)
-    await msg.edit("<i>Server restarted successfully ✅</i>")
-    system("git pull -f && pip3 install --no-cache-dir -r requirements.txt")
-    execle(sys.executable, sys.executable, "main.py", environ)
-# Rest of your callback query handlers…
+# Implement other handlers as needed...
 async def get_bot_uptime(start_time):
     uptime_seconds = int(time.time() - start_time)
     uptime_minutes = uptime_seconds // 60
@@ -78,8 +79,5 @@ async def get_bot_uptime(start_time):
         uptime_string += f" {uptime_minutes % 60}M"
     uptime_string += f" {uptime_seconds % 60} Sec"
     return uptime_string
-# Add the rest of your existing code...  
+# Your existing callback query handlers go here...
 
-# Don't Remove Credit Tg - @VJ_Botz
-# Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
-# Ask Doubt on telegram @KingVJ01
