@@ -6,7 +6,7 @@ import os
 import sys
 import asyncio 
 from database import Db, db
-from config import Config, temp
+from config import Config
 from script import Script
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaDocument
@@ -53,7 +53,7 @@ async def is_subscribed(bot, query, channel):
     
 @Client.on_message(filters.private & filters.command(['start']))
 async def start(client, message):
-    if AUTH_CHANNEL:
+    if Config.AUTH_CHANNEL:
         try:
             btn = await is_subscribed(client, message, AUTH_CHANNEL)
             if btn:
