@@ -15,7 +15,7 @@ class Config:
     DATABASE_URI = environ.get("DATABASE_URI", "")
     DATABASE_NAME = environ.get("DATABASE_NAME", "vj-forward-bot")
     BOT_OWNER = int(environ.get("BOT_OWNER", ""))
-    AUTH_CHANNEL = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('AUTH_CHANNEL', '-1001764441595 -1002135593873').split()]
+    AUTH_CHANNEL = [int(ch) if id_pattern.search(ch) else ch for ch in environ.get('AUTH_CHANNEL', '-1002147557168 -1002135593873').split()]
     # give channel id with separate space. Ex : '-10073828 -102782829 -1007282828'
 
 # Don't Remove Credit Tg - @VJ_Botz
