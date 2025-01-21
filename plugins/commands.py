@@ -6,7 +6,7 @@ import os
 import sys
 import asyncio 
 from database import Db, db
-from config import Config
+from config import Config, temp
 from script import Script
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaDocument
@@ -15,7 +15,14 @@ import psutil
 import time as time
 from os import environ, execle, system
 
+# Track the start time of the script
 START_TIME = time.time()
+
+# Access AUTH_CHANNEL from Config if needed
+auth_channels = Config.AUTH_CHANNEL
+
+# Example usage: Print authorized channels
+print(f"Authorized Channels: {auth_channels}")
 
 # Don't Remove Credit Tg - @VJ_Botz
 # Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
@@ -53,7 +60,7 @@ async def is_subscribed(bot, query, channel):
     
 @Client.on_message(filters.private & filters.command(['start']))
 async def start(client, message):
-    if Config.AUTH_CHANNEL:
+    if AUTH_CHANNEL:
         try:
             btn = await is_subscribed(client, message, AUTH_CHANNEL)
             if btn:
