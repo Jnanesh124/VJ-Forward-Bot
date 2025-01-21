@@ -30,15 +30,15 @@ print(f"Authorized Channels: {auth_channels}")
 
 main_buttons = [[
     InlineKeyboardButton('❣️ ᴅᴇᴠᴇʟᴏᴘᴇʀ ❣️', url='https://t.me/kingvj01')
-],[
+],[ 
     InlineKeyboardButton('🔍 sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ', url='https://t.me/vj_bot_disscussion'),
     InlineKeyboardButton('🤖 ᴜᴘᴅᴀᴛᴇ ᴄʜᴀɴɴᴇʟ', url='https://t.me/vj_botz')
-],[
+],[ 
     InlineKeyboardButton('💝 sᴜʙsᴄʀɪʙᴇ ᴍʏ ʏᴏᴜᴛᴜʙᴇ ᴄʜᴀɴɴᴇʟ', url='https://youtube.com/@Tech_VJ')
-],[
+],[ 
     InlineKeyboardButton('👨‍💻 ʜᴇʟᴘ', callback_data='help'),
     InlineKeyboardButton('💁 ᴀʙᴏᴜᴛ', callback_data='about')
-],[
+],[ 
     InlineKeyboardButton('⚙ sᴇᴛᴛɪɴɢs', callback_data='settings#main')
 ]]
 
@@ -60,27 +60,33 @@ async def is_subscribed(bot, query, channel):
     
 @Client.on_message(filters.private & filters.command(['start']))
 async def start(client, message):
-    if Config.AUTH_CHANNEL:
+    if Config.AUTH_CHANNEL:  # Corrected access to Config.AUTH_CHANNEL
         try:
-            btn = await is_subscribed(client, message, AUTH_CHANNEL)
+            btn = await is_subscribed(client, message, Config.AUTH_CHANNEL)  # Corrected access
             if btn:
                 username = (await client.get_me()).username
-                if message.command[1]:
+                if len(message.command) > 1:  # Check if command has an argument
                     btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start={message.command[1]}")])
                 else:
                     btn.append([InlineKeyboardButton("♻️ Try Again ♻️", url=f"https://t.me/{username}?start=true")])
-                await message.reply_text(text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇</b>", reply_markup=InlineKeyboardMarkup(btn))
+                await message.reply_text(
+                    text=f"<b>👋 Hello {message.from_user.mention},\n\nPlease join the channel then click on try again button. 😇</b>", 
+                    reply_markup=InlineKeyboardMarkup(btn)
+                )
                 return
         except Exception as e:
-            print(e)
+            print(f"Error: {e}")  # Print exception for debugging
+
     user = message.from_user
-    if not await db.is_user_exist(user.id):
-        await db.add_user(user.id, user.first_name)
-    reply_markup = InlineKeyboardMarkup(main_buttons)
+    if not await db.is_user_exist(user.id):  # Check if the user exists in the database
+        await db.add_user(user.id, user.first_name)  # Add user if not present
+
+    reply_markup = InlineKeyboardMarkup(main_buttons)  # Use main_buttons for the keyboard layout
     await client.send_message(
         chat_id=message.chat.id,
         reply_markup=reply_markup,
-        text=Script.START_TXT.format(message.from_user.first_name))
+        text=Script.START_TXT.format(message.from_user.first_name)
+    )
 
 # Don't Remove Credit Tg - @VJ_Botz
 # Subscribe YouTube Channel For Amazing Bot https://youtube.com/@Tech_VJ
@@ -102,10 +108,10 @@ async def restart(client, message):
 async def helpcb(bot, query):
     buttons = [[
         InlineKeyboardButton('🤔 ʜᴏᴡ ᴛᴏ ᴜsᴇ ᴍᴇ ❓', callback_data='how_to_use')
-    ],[
+    ],[ 
         InlineKeyboardButton('Aʙᴏᴜᴛ ✨️', callback_data='about'),
         InlineKeyboardButton('⚙ Sᴇᴛᴛɪɴɢs', callback_data='settings#main')
-    ],[
+    ],[ 
         InlineKeyboardButton('• back', callback_data='back')
     ]]
     reply_markup = InlineKeyboardMarkup(buttons)
